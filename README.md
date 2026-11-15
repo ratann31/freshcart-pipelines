@@ -8,6 +8,7 @@ RabbitMQ exercises.
 ```text
 freshcart-pipelines/
 ├── .github/workflows/ci.yml
+├── freshcart_elt/
 ├── mage/
 ├── sql/
 ├── src/
