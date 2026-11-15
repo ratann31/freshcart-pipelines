@@ -6,5 +6,5 @@ def test_prepare_data_trims_and_drops_empty_values():
 
 
 def test_prepare_data_accepts_generators():
-    assert prepare_data(value for value in [" a ", "b "]) == ["a", "not-b"]
+    assert prepare_data(value for value in [" a ", "b "]) == ["a", "b"]
 
