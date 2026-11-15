@@ -73,6 +73,30 @@ Verified output:
 The five-depth experiment table, evaluation metrics/confusion matrix, and
 custom-block execution still require dedicated screenshots and output cells.
 
+### C2-C4 actual results
+
+The updated Mage notebook verified:
+
+- `max_depth=3`: test accuracy `1.000`.
+- `max_depth=1`: test accuracy `0.633`; the `test_accuracy` quality gate
+  failed as intentionally expected.
+- The depth-1 run did not create `iris_predictions.csv`.
+- The passing depth-3 run created 30 predictions.
+- The depth-3 confusion matrix was:
+
+  ```text
+  [[10, 0, 0],
+   [0,  9, 0],
+   [0,  0, 11]]
+  ```
+
+- The Mage tunnel URL was generated and the updated metadata connected
+  `train_model` to both `save_results` and `evaluate_model`.
+- The custom block source contained `@custom` and `@test`, but one pipeline
+  run reported that Mage could not load the custom block's decorated function.
+  The custom block must be rerun after restarting Mage or rebuilt using a
+  supported block type before claiming C4 as complete.
+
 ## Screenshot mapping
 
 ### Part A
@@ -99,6 +123,8 @@ custom-block execution still require dedicated screenshots and output cells.
 
 ## Not yet evidenced
 
-Parts D, the bonus RabbitMQ-to-Snowflake integration, and the final PDF
-assembly are still pending. No result or screenshot should be claimed for
-those sections until they are executed.
+Part D implementation is now present in `stream/dispatcher.py`,
+`stream/driver.py`, and `stream/README.md`. The local payload-validation
+checks passed, but RabbitMQ execution, driver/dispatcher screenshots, the
+bonus integration, and final PDF assembly are still pending. No runtime
+result should be claimed for those sections until RabbitMQ is executed.
