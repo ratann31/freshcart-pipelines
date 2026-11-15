@@ -17,7 +17,7 @@ freshcart-pipelines/
 │   ├── Mage_Iris_PIPELINE_successful.ipynb
 │   └── Mage_C2_C4_EXPERIMENTS_successful.ipynb
 ├── report/
-│   └── 23bcs227_data_engineering_assignment.pdf
+│   └── 23BCS227_Saurav_Ratan_Assignment.pdf
 ├── tests/
 ├── requirements.txt
 └── README.md
@@ -60,7 +60,7 @@ Never leave the deliberately failing experiment on the final branch.
 ## Submission report
 
 The final report is
-`report/23bcs227_data_engineering_assignment.pdf`. Its evidence status is
+`report/23BCS227_Saurav_Ratan_Assignment.pdf`. Its evidence status is
 recorded in `report/REPORT_EVIDENCE.md`; it distinguishes verified notebook
 results from RabbitMQ and bonus runtime results that still require live
 execution.
