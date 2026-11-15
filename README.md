@@ -9,10 +9,15 @@ RabbitMQ exercises.
 freshcart-pipelines/
 ├── .github/workflows/ci.yml
 ├── freshcart_elt/
-├── mage/
-├── sql/
 ├── src/
 ├── stream/
+├── notebooks/
+│   ├── FreshCart_ELT_successful.ipynb
+│   ├── FreshCart_B3_B5_EXPERIMENTS_successful.ipynb
+│   ├── Mage_Iris_PIPELINE_successful.ipynb
+│   └── Mage_C2_C4_EXPERIMENTS_successful.ipynb
+├── report/
+│   └── 23bcs227_data_engineering_assignment.pdf
 ├── tests/
 ├── requirements.txt
 └── README.md
@@ -51,4 +56,12 @@ temporary failing test can be used to demonstrate a red GitHub Actions run:
 4. Restore the assertion, run `pytest -q`, commit, and push the final green run.
 
 Never leave the deliberately failing experiment on the final branch.
+
+## Submission report
+
+The final report is
+`report/23bcs227_data_engineering_assignment.pdf`. Its evidence status is
+recorded in `report/REPORT_EVIDENCE.md`; it distinguishes verified notebook
+results from RabbitMQ and bonus runtime results that still require live
+execution.
 
