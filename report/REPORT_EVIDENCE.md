@@ -37,6 +37,25 @@ The notebook was run again and showed 16 bronze rows, proving that another
 eight raw records arrived. A final gold-total query must still be captured
 after the rerun before claiming the idempotency comparison in the report.
 
+### B3-B5 actual results
+
+The B3-B5 experiment notebook recorded:
+
+- Before validation, ORD-1006 reasons were `bad_email` and `bad_pincode`.
+- After validation, ORD-1006 also contained `unsupported_currency`.
+- The experiment database contained repeated raw samples from reruns, so the
+  post-change query displayed nine copies of ORD-1006 but one distinct order.
+- Before B4, the prediction was Silver to Gold, multiplier 1 to 2, points 35
+  to 70, and total points 126 to 161.
+- Actual B4 results: CUST-02 Gold from 2026-08-15, ORD-1002 amount INR
+  3,536.00, 70 points, four gold orders, revenue INR 7,785.00, and total
+  loyalty points 161.
+- The deliberate B5 run failed as expected because a mock order was present.
+  The captured failure also reported the accumulated unsupported-currency,
+  no-customer, and quarantine-rate conditions caused by repeated raw samples.
+- Cleanup removed the mock order from Bronze, Gold, and Quarantine. The final
+  quality checks passed and the final mock-order count was zero.
+
 ## Part C — Mage Iris pipeline
 
 Verified output:
