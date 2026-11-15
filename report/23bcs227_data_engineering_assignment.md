@@ -8,9 +8,9 @@
 
 This report uses the successful FreshCart and Mage notebook outputs recorded in
 `REPORT_EVIDENCE.md`, plus repository code and local tests. It does not invent
-RabbitMQ runtime output, screenshots, or bonus totals. Part D runtime and the
-lakehouse bonus are implemented or planned in the repository but require a live
-broker and execution evidence before submission.
+RabbitMQ runtime output, screenshots, or bonus totals. The lakehouse bonus
+consumer setup is implemented, but requires a live broker and Snowflake
+execution evidence before submission.
 
 ## A. Git and CI/CD (15 marks)
 
@@ -169,12 +169,14 @@ claiming D2/D3 execution results.
 
 ## Bonus. Stream into the lakehouse (+10)
 
-The bonus requires a live consumer that buffers FreshCart-style messages for
-one minute, writes a landing file through the existing `write_landing()`,
-calls `load_file()`, executes the existing transformations, and publishes
-through the Gold `MERGE`. It must be run twice and compare Gold totals to prove
-idempotency. No live consumer output or before/after totals are present in the
-verified evidence, so no bonus result is claimed here.
+The bonus setup is implemented in `stream/bonus_consumer.py` and
+`stream/bonus_producer.py`. The consumer buffers FreshCart-style messages,
+writes landing files through `write_landing()`, calls `load_file()`, executes
+the existing transformations, and publishes through the Gold `MERGE`. The
+producer sends the eight built-in mock orders for a repeatable smoke test.
+The consumer must still be run twice against RabbitMQ and Snowflake; no live
+before/after totals are present in the verified evidence, so no bonus result
+is claimed here.
 
 ## E. Report and viva (15 marks)
 

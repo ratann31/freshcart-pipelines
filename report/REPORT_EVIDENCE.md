@@ -125,6 +125,16 @@ The updated Mage notebook verified:
 
 Part D implementation is now present in `stream/dispatcher.py`,
 `stream/driver.py`, and `stream/README.md`. The local payload-validation
-checks passed, but RabbitMQ execution, driver/dispatcher screenshots, the
-bonus integration, and final PDF assembly are still pending. No runtime
-result should be claimed for those sections until RabbitMQ is executed.
+checks passed.
+
+The bonus setup is now present in `stream/bonus_consumer.py` and
+`stream/bonus_producer.py`. The consumer buffers FreshCart envelopes for a
+configurable duration, reuses `write_landing()`, `load_file()`, the existing
+transformation SQL, and the Gold `MERGE`, then prints Gold totals. The producer
+publishes the eight built-in mock orders for a repeatable smoke test. Unit
+tests for envelope normalization and source validation pass.
+
+Still pending are live RabbitMQ execution, driver/dispatcher screenshots,
+bonus consumer output, two-run Gold idempotency totals, and final submission
+screenshots. No runtime result should be claimed for those sections until
+RabbitMQ and Snowflake are executed.

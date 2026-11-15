@@ -57,3 +57,44 @@ If a driver crashes before ACK, RabbitMQ redelivers the unacknowledged
 message when the connection closes. With `requeue=True`, a rejected message
 is placed back on the queue and can loop indefinitely; this implementation
 uses `requeue=False` for invalid data so it is discarded.
+
+## Bonus: stream FreshCart orders into Gold
+
+The bonus consumer reuses `freshcart_elt.extract.write_landing`,
+`freshcart_elt.snowflake_io.load_file`, the existing SQL transformations, and
+the existing Gold `MERGE`. It expects messages with this shape:
+
+```json
+{
+  "source": "web",
+  "data": {
+    "order_id": "ORD-1001",
+    "cust_email": "priya.r@gmail.com",
+    "cust_name": "Priya R",
+    "order_date": "2026-09-01",
+    "amount": "1250.00",
+    "currency": "INR",
+    "pincode": "600041",
+    "updated_at": "2026-09-01 10:02:00"
+  }
+}
+```
+
+Complete the normal FreshCart setup once so CRM, FX, pincode, warehouse, and
+Snowflake objects already exist. Then run the consumer for one minute:
+
+```powershell
+python -m stream.bonus_consumer --duration 60 --run-date 2026-09-04
+```
+
+For a local smoke test, publish the built-in eight mock orders in another
+terminal:
+
+```powershell
+python -m stream.bonus_producer
+```
+
+Run the consumer twice with the same input and compare the JSON
+`gold_orders`, `gold_revenue`, and `gold_points` values. They should remain
+unchanged because the Gold `MERGE` matches by `order_id` and `row_hash`.
+Keep generated landing files and credentials out of Git.
