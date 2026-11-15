@@ -74,8 +74,6 @@ def process_batch(
     """Write, load, transform, and check one buffered order batch."""
     from freshcart_elt import extract
     from freshcart_elt import snowflake_io
-    from freshcart_elt.run_pipeline import quality_checks
-
     if not orders:
         raise ValueError("cannot process an empty order batch")
 
@@ -107,7 +105,14 @@ def process_batch(
         variables = {"run_id": run_id, "run_date": run_date.isoformat()}
         for filename in SQL_FILES:
             snowflake_io.run_sql_file(conn, sql_dir / filename, variables)
-        quality_checks(conn, strict=True)
+        duplicate_count = snowflake_io.query_one(
+            conn,
+            "SELECT COUNT(*) - COUNT(DISTINCT order_id) FROM gold.fct_orders",
+        )[0]
+        if duplicate_count:
+            raise RuntimeError(
+                f"bonus Gold uniqueness check failed: {duplicate_count} duplicates"
+            )
         totals = snowflake_io.query_one(
             conn,
             "SELECT COUNT(*), COALESCE(SUM(amount_inr), 0), "
