@@ -54,6 +54,87 @@ The quarantine-rate check is intentionally a warning for this assignment
 sample. The unsupported-currency validation adds `unsupported_currency` to
 ORD-1006 alongside its existing invalid-email and invalid-pincode reasons.
 
+## Colab screenshot checkpoints
+
+Add a short Markdown cell with the matching heading before each query below.
+Run the query, keep the result visible, and capture the screenshot immediately.
+Do not include the Secrets panel or any credential value in a screenshot.
+
+### Screenshot B0 — connection and objects
+
+```sql
+SELECT CURRENT_ACCOUNT(), CURRENT_USER(), CURRENT_ROLE(), CURRENT_WAREHOUSE();
+SHOW DATABASES LIKE 'FRESHCART';
+SHOW SCHEMAS IN DATABASE FRESHCART;
+```
+
+### Screenshot B1 — baseline row counts
+
+```sql
+SELECT COUNT(*) AS bronze_orders FROM bronze.orders_raw;
+SELECT COUNT(*) AS silver_clean FROM silver.orders_clean;
+SELECT COUNT(*) AS quarantined FROM quarantine.orders;
+SELECT COUNT(*) AS deduplicated FROM silver.orders_dedup;
+```
+
+### Screenshot B1 — gold totals
+
+```sql
+SELECT order_id, order_date, tier, amount, currency, fx_rate, amount_inr,
+       loyalty_points, city, region
+FROM gold.fct_orders
+ORDER BY order_id;
+
+SELECT COUNT(*) AS orders,
+       SUM(amount_inr) AS revenue_inr,
+       SUM(loyalty_points) AS loyalty_points
+FROM gold.fct_orders;
+```
+
+### Screenshot B2 — manual order traces
+
+```sql
+SELECT * FROM silver.orders_checked WHERE order_id IN ('ORD-1003', 'ORD-1005');
+SELECT * FROM silver.orders_dedup WHERE order_id IN ('ORD-1003', 'ORD-1005');
+SELECT * FROM gold.fct_orders WHERE order_id IN ('ORD-1003', 'ORD-1005');
+```
+
+### Screenshot B3 — unsupported currency
+
+Capture ORD-1006 from `silver.orders_checked` before and after the
+`unsupported_currency` change:
+
+```sql
+SELECT order_id, currency, reasons
+FROM silver.orders_checked
+WHERE order_id = 'ORD-1006';
+```
+
+### Screenshot B4 — prediction and actual comparison
+
+Before running `sql/90_b4_add_arjun_gold.sql`, write the five expected values
+in a Markdown cell. After rerunning the SCD2 and gold statements, query:
+
+```sql
+SELECT * FROM dim.customers_scd2
+WHERE cust_id = 'CUST-02'
+ORDER BY valid_from;
+
+SELECT order_id, tier, multiplier, amount_inr, loyalty_points
+FROM gold.fct_orders
+WHERE email = 'arjun.k@yahoo.in';
+```
+
+### Screenshot B5 — quality check failure and cleanup
+
+Run `sql/91_b5_mock_order.sql`, rerun the transformations, and capture the
+`no mock orders in production` failure. Then remove the mock row and rerun:
+
+```sql
+DELETE FROM bronze.orders_raw
+WHERE raw:order_id::STRING = 'ORD-MOCK-B5';
+```
+
 ## Assignment experiments
 
 1. Capture the baseline table queries and the ORD-1003/ORD-1005 trace.
