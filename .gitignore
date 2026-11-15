@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.env
+.env.*
+!.env.example
+*.pkl
+*.joblib
+iris_predictions.csv
+landing/
+*.json.gz
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
